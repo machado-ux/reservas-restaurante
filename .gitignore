@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno (secretos)
+.env
+.env.local
+.env.*.local
+
+# Datos locales (no subir a producción)
+data.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+
+# Logs y debug
+*.log
+npm-debug.log*

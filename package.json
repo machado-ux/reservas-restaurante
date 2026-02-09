@@ -1,0 +1,22 @@
+{
+  "name": "sistema-reservas-restaurante",
+  "version": "1.0.0",
+  "description": "Sistema de reservas para bar/restaurante con panel de administración",
+  "main": "Sistema de reservas restaurante.js",
+  "scripts": {
+    "start": "node \"Sistema de reservas restaurante.js\"",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.7"
+  },
+  "devDependencies": {
+    "supabase": "^2.75.5"
+  }
+}
