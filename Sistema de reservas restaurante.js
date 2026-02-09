@@ -16,10 +16,13 @@ const supabase = SUPABASE_URL && SUPABASE_SERVICE_KEY
     ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
     : null;
 
+// Ruta base del proyecto (funciona tanto en local como en Vercel)
+const PROJECT_ROOT = path.resolve(__dirname);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static(PROJECT_ROOT));
 
 // En Vercel no se ejecuta start(); cargar datos en la primera petición
 let dataLoaded = false;
@@ -187,12 +190,24 @@ transporter.verify((error, success) => {
 
 // Serve the main HTML file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Sistema de Reservas Restaurante.html'));
+    try {
+        const filePath = path.join(PROJECT_ROOT, 'Sistema de Reservas Restaurante.html');
+        const html = fs.readFileSync(filePath, 'utf8');
+        res.type('html').send(html);
+    } catch (err) {
+        res.status(500).send('Error cargando página principal: ' + err.message);
+    }
 });
 
 // Serve admin panel
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Panel de administración - Sistema de reservas.html'));
+    try {
+        const filePath = path.join(PROJECT_ROOT, 'Panel de administraci\u00f3n - Sistema de reservas.html');
+        const html = fs.readFileSync(filePath, 'utf8');
+        res.type('html').send(html);
+    } catch (err) {
+        res.status(500).send('Error cargando panel admin: ' + err.message);
+    }
 });
 
 // ============================================
