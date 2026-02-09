@@ -191,7 +191,7 @@ transporter.verify((error, success) => {
 // Serve the main HTML file
 app.get('/', (req, res) => {
     try {
-        const filePath = path.join(PROJECT_ROOT, 'Sistema de Reservas Restaurante.html');
+        const filePath = path.join(PROJECT_ROOT, 'reservas.html');
         const html = fs.readFileSync(filePath, 'utf8');
         res.type('html').send(html);
     } catch (err) {
@@ -202,7 +202,7 @@ app.get('/', (req, res) => {
 // Serve admin panel
 app.get('/admin', (req, res) => {
     try {
-        const filePath = path.join(PROJECT_ROOT, 'Panel de administraci\u00f3n - Sistema de reservas.html');
+        const filePath = path.join(PROJECT_ROOT, 'admin-panel.html');
         const html = fs.readFileSync(filePath, 'utf8');
         res.type('html').send(html);
     } catch (err) {
