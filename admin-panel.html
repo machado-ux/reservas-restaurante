@@ -394,7 +394,10 @@
             <div class="panel">
                 <div class="panel-head">
                     <span class="panel-title">Reservas del dia</span>
-                    <span class="panel-count" id="reservationCount">0 reservas</span>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <span class="panel-count" id="reservationCount">0 reservas</span>
+                        <button class="btn btn-accent btn-sm" onclick="openReservationForm()">+ Nueva reserva</button>
+                    </div>
                 </div>
                 <div class="panel-body" id="reservationsList">
                     <div class="loading"><div class="spinner"></div>Cargando...</div>
@@ -505,6 +508,58 @@
         </div>
     </div>
 
+    <!-- Create/Edit Reservation Modal -->
+    <div class="modal" id="resFormModal">
+        <div class="modal-box" style="max-width:480px;">
+            <div class="modal-title" id="resFormTitle">Nueva reserva</div>
+            <div class="cfg-grid">
+                <div class="fg">
+                    <label class="fg-label">Nombre</label>
+                    <input type="text" class="fg-input" id="rfName" placeholder="Nombre completo">
+                </div>
+                <div class="fg">
+                    <label class="fg-label">Telefono</label>
+                    <input type="tel" class="fg-input" id="rfPhone" placeholder="+34 600 000 000">
+                </div>
+                <div class="fg">
+                    <label class="fg-label">Email</label>
+                    <input type="email" class="fg-input" id="rfEmail" placeholder="email@ejemplo.com">
+                </div>
+                <div class="fg">
+                    <label class="fg-label">Comensales</label>
+                    <select class="fg-input" id="rfGuests">
+                        <option value="1">1 persona</option>
+                        <option value="2" selected>2 personas</option>
+                        <option value="3">3 personas</option>
+                        <option value="4">4 personas</option>
+                        <option value="5">5 personas</option>
+                        <option value="6">6 personas</option>
+                        <option value="7">7 personas</option>
+                        <option value="8">8 personas</option>
+                        <option value="9">9 personas</option>
+                        <option value="10+">10+ personas</option>
+                    </select>
+                </div>
+                <div class="fg">
+                    <label class="fg-label">Fecha</label>
+                    <input type="date" class="fg-input" id="rfDate">
+                </div>
+                <div class="fg">
+                    <label class="fg-label">Hora</label>
+                    <input type="time" class="fg-input" id="rfTime">
+                </div>
+            </div>
+            <div class="fg">
+                <label class="fg-label">Mesa (opcional)</label>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;" id="rfTablesRow"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeResForm()">Cancelar</button>
+                <button class="btn btn-accent" id="btnResFormSave" onclick="saveResForm()">Crear reserva</button>
+            </div>
+        </div>
+    </div>
+
     <div class="tbl-tooltip" id="globalTip"></div>
     <div class="toast" id="toast"></div>
 
@@ -513,6 +568,7 @@
         let config = {};
         let reservations = [];
         let selectedReservation = null;
+        let editingReservationId = null;
         let zoomLevel = 100;
         let activeTimeFilter = 'all';
         let timeFilterOpen = false;
@@ -643,6 +699,12 @@
         function setupEventListeners() {
             document.querySelectorAll('.day-btn').forEach(b => b.addEventListener('click', function() { this.classList.toggle('selected'); }));
             document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('show'); }));
+            ['rfGuests', 'rfDate', 'rfTime'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    const res = editingReservationId ? reservations.find(r => r.id === editingReservationId) : null;
+                    renderResFormTables(res);
+                });
+            });
         }
 
         async function loadConfig() {
@@ -853,9 +915,7 @@
             if (!confirmed) {
                 footer += '<button class="btn btn-success btn-sm" onclick="openTableAssignModal(selectedReservation,\'confirm\')">Confirmar</button>';
             }
-            if (hasMesa) {
-                footer += '<button class="btn btn-accent btn-sm" onclick="openTableAssignModal(selectedReservation,\'move\')">Mover de mesa</button>';
-            }
+            footer += '<button class="btn btn-accent btn-sm" onclick="openReservationForm(\'' + sr.id + '\')">Modificar reserva</button>';
             footer += '<button class="btn btn-outline" onclick="closeDetailsModal()">Cerrar</button>';
             document.getElementById('detailsFooter').innerHTML = footer;
 
@@ -1009,6 +1069,149 @@
 
         function hideTip() {
             document.getElementById('globalTip').style.display = 'none';
+        }
+
+        function openReservationForm(editId) {
+            editingReservationId = editId || null;
+            const isEdit = !!editingReservationId;
+            const res = isEdit ? reservations.find(r => r.id === editingReservationId) : null;
+
+            document.getElementById('resFormTitle').textContent = isEdit ? 'Modificar reserva' : 'Nueva reserva';
+            document.getElementById('btnResFormSave').textContent = isEdit ? 'Guardar cambios' : 'Crear reserva';
+
+            document.getElementById('rfName').value = res ? res.name : '';
+            document.getElementById('rfPhone').value = res ? res.phone : '';
+            document.getElementById('rfEmail').value = res ? (res.email || '') : '';
+            document.getElementById('rfGuests').value = res ? String(res.guests) : '2';
+            document.getElementById('rfDate').value = res ? res.date : currentDate;
+            document.getElementById('rfTime').value = res ? res.time : (config.openingTime || '12:00');
+
+            renderResFormTables(res);
+            document.getElementById('resFormModal').classList.add('show');
+        }
+
+        let rfSelectedTable = null;
+
+        function renderResFormTables(res) {
+            const row = document.getElementById('rfTablesRow');
+            const n = config.totalTables || 20;
+            const guestsVal = document.getElementById('rfGuests').value;
+            const minCap = guestsVal === '10+' ? 10 : parseInt(guestsVal) || 1;
+            const dateVal = document.getElementById('rfDate').value;
+            const timeVal = document.getElementById('rfTime').value;
+
+            const takenTables = new Set();
+            reservations.forEach(r => {
+                if (editingReservationId && r.id === editingReservationId) return;
+                if (r.date === dateVal && r.time === timeVal && r.assignedTables) {
+                    r.assignedTables.forEach(t => takenTables.add(t));
+                }
+            });
+
+            rfSelectedTable = (res && res.assignedTables && res.assignedTables.length) ? res.assignedTables[0] : null;
+            row.innerHTML = '';
+
+            let anyShown = false;
+            for (let i = 1; i <= n; i++) {
+                const cap = i <= 8 ? 2 : (i <= 14 ? 4 : (i <= 18 ? 6 : 8));
+                if (cap < minCap) continue;
+                anyShown = true;
+                const taken = takenTables.has(i);
+                const selected = rfSelectedTable === i;
+                const btn = document.createElement('div');
+                btn.className = 'tbl' + (taken ? ' assign-taken' : (selected ? ' assign-selected available' : ' available'));
+                btn.style.cssText = 'width:48px;height:48px;cursor:' + (taken ? 'not-allowed' : 'pointer');
+                btn.innerHTML = '<div class="tbl-num">' + i + '</div><div class="tbl-cap">' + cap + 'p</div>';
+                if (!taken) {
+                    btn.addEventListener('click', function() {
+                        row.querySelectorAll('.tbl').forEach(t => t.classList.remove('assign-selected'));
+                        if (rfSelectedTable === i) {
+                            rfSelectedTable = null;
+                        } else {
+                            this.classList.add('assign-selected');
+                            rfSelectedTable = i;
+                        }
+                    });
+                }
+                row.appendChild(btn);
+            }
+            if (!anyShown) {
+                row.innerHTML = '<span style="font-size:0.75rem;color:var(--text-muted);">No hay mesas con capacidad para ' + minCap + ' personas</span>';
+            }
+        }
+
+        function closeResForm() {
+            document.getElementById('resFormModal').classList.remove('show');
+            editingReservationId = null;
+            rfSelectedTable = null;
+        }
+
+        async function saveResForm() {
+            const name = document.getElementById('rfName').value.trim();
+            const phone = document.getElementById('rfPhone').value.trim();
+            const email = document.getElementById('rfEmail').value.trim();
+            const guests = document.getElementById('rfGuests').value;
+            const date = document.getElementById('rfDate').value;
+            const time = document.getElementById('rfTime').value;
+
+            if (!name) { showToast('Introduce un nombre', 'error'); return; }
+            if (!phone) { showToast('Introduce un telefono', 'error'); return; }
+            if (!date) { showToast('Selecciona una fecha', 'error'); return; }
+            if (!time) { showToast('Selecciona una hora', 'error'); return; }
+
+            const isEdit = !!editingReservationId;
+
+            try {
+                if (isEdit) {
+                    const body = { name, phone, email, guests, date, time };
+                    if (rfSelectedTable) {
+                        body.assignedTables = [rfSelectedTable];
+                    }
+                    const r = await fetch('/api/admin/reservations/' + editingReservationId, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    const d = await r.json();
+                    if (d.success) {
+                        closeResForm();
+                        closeDetailsModal();
+                        showToast('Reserva modificada', 'success');
+                        loadReservations();
+                    } else {
+                        showToast(d.message || 'Error al modificar', 'error');
+                    }
+                } else {
+                    const body = { name, phone, email, guests, date, time, source: 'admin' };
+                    const r = await fetch('/api/send-reservation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    const d = await r.json();
+                    if (d.success) {
+                        const newId = d.reservationId || null;
+                        closeResForm();
+                        showToast('Reserva creada', 'success');
+                        await loadReservations();
+                        if (newId && rfSelectedTable) {
+                            const res = reservations.find(rv => rv.id === newId);
+                            if (res) {
+                                await fetch('/api/admin/reservations/' + newId, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ assignedTables: [rfSelectedTable], status: 'confirmed' })
+                                });
+                                loadReservations();
+                            }
+                        }
+                    } else {
+                        showToast(d.message || 'Error al crear reserva', 'error');
+                    }
+                }
+            } catch(e) {
+                showToast('Error de conexion', 'error');
+            }
         }
 
         function refreshData() { loadConfig(); loadReservations(); showToast('Actualizado', 'success'); }

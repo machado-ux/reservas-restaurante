@@ -341,11 +341,11 @@ function minutesToTime(minutes) {
     return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
 }
 
-// Update reservation status
+// Update reservation (status, table, or any field)
 app.put('/api/admin/reservations/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, assignedTables } = req.body;
+        const { status, assignedTables, name, phone, email, guests, date, time } = req.body;
         
         const reservation = reservations.find(r => r.id === id);
         if (!reservation) {
@@ -354,12 +354,25 @@ app.put('/api/admin/reservations/:id', async (req, res) => {
         
         if (status) reservation.status = status;
         if (assignedTables) reservation.assignedTables = assignedTables;
+        if (name !== undefined) reservation.name = name;
+        if (phone !== undefined) reservation.phone = phone;
+        if (email !== undefined) reservation.email = email;
+        if (guests !== undefined) reservation.guests = guests;
+        if (date !== undefined) reservation.date = date;
+        if (time !== undefined) reservation.time = time;
         
         if (supabase) {
-            await supabase.from('reservations').update({
+            const updateData = {
                 status: reservation.status,
                 assigned_tables: reservation.assignedTables
-            }).eq('id', id);
+            };
+            if (name !== undefined) updateData.name = reservation.name;
+            if (phone !== undefined) updateData.phone = reservation.phone;
+            if (email !== undefined) updateData.email = reservation.email;
+            if (guests !== undefined) updateData.guests = reservation.guests;
+            if (date !== undefined) updateData.date = reservation.date;
+            if (time !== undefined) updateData.time = reservation.time;
+            await supabase.from('reservations').update(updateData).eq('id', id);
         } else saveData();
         res.json({ success: true, reservation });
     } catch (error) {
@@ -425,13 +438,19 @@ app.get('/api/admin/stats', (req, res) => {
 // API endpoint to send reservation email
 app.post('/api/send-reservation', async (req, res) => {
     try {
-        const { name, phone, email, guests, date, time } = req.body;
+        const { name, phone, email, guests, date, time, source } = req.body;
 
-        // Validate required fields
-        if (!name || !phone || !email || !guests || !date || !time) {
+        // Validate required fields (email optional for admin-created reservations)
+        if (!name || !phone || !guests || !date || !time) {
             return res.status(400).json({ 
                 success: false, 
                 message: 'Faltan campos obligatorios' 
+            });
+        }
+        if (!email && source !== 'admin') {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'El email es obligatorio' 
             });
         }
 
@@ -775,9 +794,13 @@ app.post('/api/send-reservation', async (req, res) => {
             `
         };
 
-        // Send both emails
-        await transporter.sendMail(restaurantMailOptions);
-        await transporter.sendMail(customerMailOptions);
+        // Send emails (skip if no email configured or no customer email)
+        try {
+            await transporter.sendMail(restaurantMailOptions);
+            if (email) await transporter.sendMail(customerMailOptions);
+        } catch(emailErr) {
+            console.log('Email no enviado (configuracion pendiente):', emailErr.message);
+        }
 
         console.log(`✅ Reserva confirmada: ${name} - ${formattedDate} ${time} - ID: ${reservation.id}`);
 
