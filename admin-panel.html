@@ -302,10 +302,14 @@
             padding: 8px 10px; border: 1px solid var(--border);
             border-radius: 4px; margin-bottom: 6px;
             border-left: 3px solid var(--accent);
+            cursor: pointer; transition: border-color 0.15s;
         }
+        .tbl-res-item:hover { border-color: var(--accent); }
         .tbl-res-item.is-confirmed { border-left-color: var(--success); }
         .tbl-res-name { font-size: 0.8125rem; font-weight: 600; }
         .tbl-res-meta { font-size: 0.6875rem; color: var(--text-muted); margin-top: 2px; }
+        .tbl-res-hint { font-size: 0.5625rem; color: var(--accent); margin-top: 3px; }
+        .tbl-no-cap { opacity: 0.35; cursor: not-allowed; }
 
         /* --- Toast --- */
         .toast {
@@ -470,11 +474,7 @@
         <div class="modal-box">
             <div class="modal-title">Detalles de la reserva</div>
             <div id="reservationDetails"></div>
-            <div class="modal-footer">
-                <button class="btn btn-danger btn-sm" onclick="deleteReservation()">Eliminar</button>
-                <button class="btn btn-success btn-sm" onclick="openTableAssignModal(selectedReservation)">Confirmar</button>
-                <button class="btn btn-outline" onclick="closeDetailsModal()">Cerrar</button>
-            </div>
+            <div class="modal-footer" id="detailsFooter"></div>
         </div>
     </div>
 
@@ -689,17 +689,8 @@
             } catch(e) {}
         }
 
-        async function deleteReservation() {
-            if (!selectedReservation || !confirm('Eliminar esta reserva?')) return;
-            try {
-                const r = await fetch('/api/admin/reservations/' + selectedReservation.id, { method: 'DELETE' });
-                const d = await r.json();
-                if (d.success) { closeDetailsModal(); showToast('Reserva eliminada', 'success'); loadReservations(); }
-            } catch(e) { showToast('Error al eliminar', 'error'); }
-        }
-
         function confirmReservation() {
-            if (selectedReservation) openTableAssignModal(selectedReservation);
+            if (selectedReservation) openTableAssignModal(selectedReservation, 'confirm');
         }
 
         function updateStats(s) {
@@ -735,6 +726,7 @@
                     '<div class="res-actions" onclick="event.stopPropagation()">' +
                         (confirmed ? '' : '<button class="btn btn-success btn-sm" onclick="quickConfirm(\'' + r.id + '\')">Confirmar</button>') +
                         '<button class="btn btn-outline btn-sm" onclick="showReservationDetails(\'' + r.id + '\')">Detalles</button>' +
+                        '<button class="btn btn-danger btn-sm" onclick="cancelReservation(\'' + r.id + '\')">Cancelar</button>' +
                     '</div>' +
                 '</div>';
             }).join('');
@@ -822,9 +814,10 @@
                 toShow.forEach(r => {
                     const gt = r.guests === '10+' ? '10+ pers.' : r.guests + ' pers.';
                     const st = r.status === 'confirmed' ? 'Confirmada' : 'Pendiente';
-                    html += '<div class="tbl-res-item' + (r.status === 'confirmed' ? ' is-confirmed' : '') + '">' +
+                    html += '<div class="tbl-res-item' + (r.status === 'confirmed' ? ' is-confirmed' : '') + '" onclick="closeTableInfoModal();showReservationDetails(\'' + r.id + '\')">' +
                         '<div class="tbl-res-name">' + r.name + '</div>' +
                         '<div class="tbl-res-meta">' + r.time + ' - ' + gt + ' - ' + st + ' - ' + r.phone + '</div>' +
+                        '<div class="tbl-res-hint">Click para ver detalles</div>' +
                     '</div>';
                 });
                 body.innerHTML = html;
@@ -840,36 +833,63 @@
         function showReservationDetails(id) {
             selectedReservation = reservations.find(r => r.id === id);
             if (!selectedReservation) return;
-            const fd = new Date(selectedReservation.date + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            const gt = selectedReservation.guests === '10+' ? '10+ personas' : selectedReservation.guests + (selectedReservation.guests == 1 ? ' persona' : ' personas');
+            const sr = selectedReservation;
+            const fd = new Date(sr.date + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const gt = sr.guests === '10+' ? '10+ personas' : sr.guests + (sr.guests == 1 ? ' persona' : ' personas');
+            const hasMesa = sr.assignedTables && sr.assignedTables.length;
+            const confirmed = sr.status === 'confirmed';
+
             document.getElementById('reservationDetails').innerHTML =
-                '<div class="info-row"><span class="info-lbl">Nombre</span><span class="info-val">' + selectedReservation.name + '</span></div>' +
-                '<div class="info-row"><span class="info-lbl">Telefono</span><span class="info-val">' + selectedReservation.phone + '</span></div>' +
-                '<div class="info-row"><span class="info-lbl">Email</span><span class="info-val">' + selectedReservation.email + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Nombre</span><span class="info-val">' + sr.name + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Telefono</span><span class="info-val">' + sr.phone + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Email</span><span class="info-val">' + sr.email + '</span></div>' +
                 '<div class="info-row"><span class="info-lbl">Fecha</span><span class="info-val">' + fd + '</span></div>' +
-                '<div class="info-row"><span class="info-lbl">Hora</span><span class="info-val">' + selectedReservation.time + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Hora</span><span class="info-val">' + sr.time + '</span></div>' +
                 '<div class="info-row"><span class="info-lbl">Comensales</span><span class="info-val">' + gt + '</span></div>' +
-                '<div class="info-row"><span class="info-lbl">Mesa</span><span class="info-val">' + (selectedReservation.assignedTables && selectedReservation.assignedTables.length ? 'Mesa ' + selectedReservation.assignedTables.join(', ') : 'Sin asignar') + '</span></div>' +
-                '<div class="info-row"><span class="info-lbl">Estado</span><span class="info-val">' + (selectedReservation.status === 'confirmed' ? 'Confirmada' : 'Pendiente') + '</span></div>';
+                '<div class="info-row"><span class="info-lbl">Mesa</span><span class="info-val">' + (hasMesa ? 'Mesa ' + sr.assignedTables.join(', ') : 'Sin asignar') + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Estado</span><span class="info-val">' + (confirmed ? 'Confirmada' : 'Pendiente') + '</span></div>';
+
+            let footer = '<button class="btn btn-danger btn-sm" onclick="cancelReservation(\'' + sr.id + '\')">Cancelar reserva</button>';
+            if (!confirmed) {
+                footer += '<button class="btn btn-success btn-sm" onclick="openTableAssignModal(selectedReservation,\'confirm\')">Confirmar</button>';
+            }
+            if (hasMesa) {
+                footer += '<button class="btn btn-accent btn-sm" onclick="openTableAssignModal(selectedReservation,\'move\')">Mover de mesa</button>';
+            }
+            footer += '<button class="btn btn-outline" onclick="closeDetailsModal()">Cerrar</button>';
+            document.getElementById('detailsFooter').innerHTML = footer;
+
             document.getElementById('detailsModal').classList.add('show');
         }
 
         let pendingConfirmId = null;
         let selectedTableForAssign = null;
+        let assignMode = 'confirm';
 
         function quickConfirm(id) {
             const res = reservations.find(r => r.id === id);
-            if (res) openTableAssignModal(res);
+            if (res) openTableAssignModal(res, 'confirm');
         }
 
-        function openTableAssignModal(reservation) {
+        function guestCount(reservation) {
+            if (!reservation) return 1;
+            if (reservation.guests === '10+') return 10;
+            return parseInt(reservation.guests) || 1;
+        }
+
+        function openTableAssignModal(reservation, mode) {
             if (!reservation) return;
             pendingConfirmId = reservation.id;
             selectedTableForAssign = null;
+            assignMode = mode || 'confirm';
             document.getElementById('btnAssignConfirm').disabled = true;
 
             const gt = reservation.guests === '10+' ? '10+' : reservation.guests;
-            document.getElementById('assignInfo').textContent = reservation.name + ' - ' + reservation.time + ' - ' + gt + ' pers.';
+            const modeLabel = assignMode === 'move' ? 'Mover de mesa' : 'Asignar mesa';
+            document.getElementById('assignInfo').textContent = modeLabel + ': ' + reservation.name + ' - ' + reservation.time + ' - ' + gt + ' pers.';
+            document.getElementById('btnAssignConfirm').textContent = assignMode === 'move' ? 'Mover aqui' : 'Confirmar mesa';
+
+            const minCap = guestCount(reservation);
 
             const takenTables = new Set();
             reservations.forEach(r => {
@@ -881,8 +901,12 @@
             const grid = document.getElementById('assignTablesGrid');
             const n = config.totalTables || 20;
             grid.innerHTML = '';
+            let anyShown = false;
             for (let i = 1; i <= n; i++) {
                 const cap = i <= 8 ? 2 : (i <= 14 ? 4 : (i <= 18 ? 6 : 8));
+                if (cap < minCap) continue;
+
+                anyShown = true;
                 const taken = takenTables.has(i);
                 const el = document.createElement('div');
                 el.className = 'tbl' + (taken ? ' assign-taken' : ' available');
@@ -897,6 +921,9 @@
                 }
                 grid.appendChild(el);
             }
+            if (!anyShown) {
+                grid.innerHTML = '<div class="empty" style="grid-column:1/-1;">No hay mesas con capacidad para ' + minCap + ' personas</div>';
+            }
             document.getElementById('tableAssignModal').classList.add('show');
         }
 
@@ -909,19 +936,35 @@
         async function confirmWithTable() {
             if (!pendingConfirmId || !selectedTableForAssign) return;
             try {
+                const body = { assignedTables: [selectedTableForAssign] };
+                if (assignMode === 'confirm') body.status = 'confirmed';
                 const r = await fetch('/api/admin/reservations/' + pendingConfirmId, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: 'confirmed', assignedTables: [selectedTableForAssign] })
+                    body: JSON.stringify(body)
                 });
                 const d = await r.json();
                 if (d.success) {
                     closeTableAssignModal();
                     closeDetailsModal();
-                    showToast('Confirmada - Mesa ' + selectedTableForAssign, 'success');
+                    const msg = assignMode === 'move' ? 'Movida a Mesa ' + selectedTableForAssign : 'Confirmada - Mesa ' + selectedTableForAssign;
+                    showToast(msg, 'success');
                     loadReservations();
                 }
-            } catch(e) { showToast('Error al confirmar', 'error'); }
+            } catch(e) { showToast('Error', 'error'); }
+        }
+
+        async function cancelReservation(id) {
+            if (!confirm('Cancelar esta reserva?')) return;
+            try {
+                const r = await fetch('/api/admin/reservations/' + id, { method: 'DELETE' });
+                const d = await r.json();
+                if (d.success) {
+                    closeDetailsModal();
+                    showToast('Reserva cancelada', 'success');
+                    loadReservations();
+                }
+            } catch(e) { showToast('Error al cancelar', 'error'); }
         }
 
         function updateConfigForm() {
