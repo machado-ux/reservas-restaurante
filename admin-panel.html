@@ -218,18 +218,17 @@
 
         /* --- Tooltip --- */
         .tbl-tooltip {
-            display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
-            transform: translateX(-50%); background: var(--primary); color: #D4D4D8;
-            padding: 6px 10px; border-radius: 4px; font-size: 0.625rem;
-            white-space: nowrap; z-index: 50; pointer-events: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); line-height: 1.5;
+            display: none; position: fixed;
+            background: var(--primary); color: #D4D4D8;
+            padding: 8px 12px; border-radius: 5px; font-size: 0.6875rem;
+            white-space: nowrap; z-index: 9999; pointer-events: none;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25); line-height: 1.6;
         }
-        .tbl-tooltip::after {
-            content: ''; position: absolute; top: 100%; left: 50%;
-            transform: translateX(-50%); border: 4px solid transparent;
-            border-top-color: var(--primary);
+        .tbl-tooltip::before {
+            content: ''; position: absolute; bottom: 100%; left: 12px;
+            border: 5px solid transparent;
+            border-bottom-color: var(--primary);
         }
-        .tbl:hover .tbl-tooltip { display: block; }
         .tbl-tooltip .tt-name { font-weight: 600; color: #fff; }
         .tbl-tooltip .tt-line { opacity: 0.7; }
 
@@ -504,6 +503,7 @@
         </div>
     </div>
 
+    <div class="tbl-tooltip" id="globalTip"></div>
     <div class="toast" id="toast"></div>
 
     <script>
@@ -744,23 +744,23 @@
                 const el = document.createElement('div');
                 el.className = 'tbl ' + status;
 
-                let tooltipHtml = '';
+                let tipContent = '';
                 if (tableRes.length) {
-                    tooltipHtml = '<div class="tbl-tooltip">';
                     tableRes.forEach(r => {
-                        tooltipHtml += '<div class="tt-name">' + r.name + '</div>';
-                        tooltipHtml += '<div class="tt-line">' + r.time + ' - ' + (r.guests === '10+' ? '10+' : r.guests) + ' pers.</div>';
+                        tipContent += '<div class="tt-name">' + r.name + '</div>';
+                        tipContent += '<div class="tt-line">' + r.time + ' - ' + (r.guests === '10+' ? '10+' : r.guests) + ' pers.</div>';
                     });
-                    tooltipHtml += '</div>';
                 } else {
-                    tooltipHtml = '<div class="tbl-tooltip"><div class="tt-line">Sin reservas' + (range ? ' en este horario' : '') + '</div></div>';
+                    tipContent = '<div class="tt-line">Sin reservas' + (range ? ' en este horario' : '') + '</div>';
                 }
 
                 el.innerHTML = '<div class="tbl-dot ' + status + '"></div>' +
                     '<div class="tbl-num">' + i + '</div>' +
-                    '<div class="tbl-cap">' + cap + 'p</div>' +
-                    tooltipHtml;
+                    '<div class="tbl-cap">' + cap + 'p</div>';
 
+                el.dataset.tip = tipContent;
+                el.addEventListener('mouseenter', showTip);
+                el.addEventListener('mouseleave', hideTip);
                 el.addEventListener('click', function() { showTableInfo(i); });
                 c.appendChild(el);
             }
@@ -917,6 +917,25 @@
             t.textContent = msg;
             t.className = 'toast ' + type + ' show';
             setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function showTip(e) {
+            const tip = document.getElementById('globalTip');
+            tip.innerHTML = this.dataset.tip;
+            tip.style.display = 'block';
+            const rect = this.getBoundingClientRect();
+            const tipRect = tip.getBoundingClientRect();
+            let left = rect.left;
+            let top = rect.bottom + 8;
+            if (left + tipRect.width > window.innerWidth - 12) left = window.innerWidth - tipRect.width - 12;
+            if (left < 8) left = 8;
+            if (top + tipRect.height > window.innerHeight - 12) top = rect.top - tipRect.height - 8;
+            tip.style.left = left + 'px';
+            tip.style.top = top + 'px';
+        }
+
+        function hideTip() {
+            document.getElementById('globalTip').style.display = 'none';
         }
 
         function refreshData() { loadConfig(); loadReservations(); showToast('Actualizado', 'success'); }
