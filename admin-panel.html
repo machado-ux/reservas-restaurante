@@ -358,6 +358,9 @@
         .tbl-dot.reserved { background: var(--warning); }
         .tbl-dot.occupied { background: var(--danger); }
 
+        .tbl.assign-taken { background: #FEF2F2; border-color: #FECACA; opacity: 0.5; cursor: not-allowed; }
+        .tbl.assign-selected { background: var(--accent-subtle); border-color: var(--accent); box-shadow: 0 0 0 2px rgba(124,58,237,0.2); }
+
         .legend {
             display: flex;
             gap: 12px;
@@ -686,8 +689,24 @@
             <div id="reservationDetails"></div>
             <div class="modal-footer">
                 <button class="btn btn-danger btn-sm" onclick="deleteReservation()">Eliminar</button>
-                <button class="btn btn-success btn-sm" onclick="confirmReservation()">Confirmar</button>
+                <button class="btn btn-success btn-sm" onclick="openTableAssignModal(selectedReservation)">Confirmar</button>
                 <button class="btn btn-outline" onclick="closeDetailsModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Assignment Modal -->
+    <div class="modal" id="tableAssignModal">
+        <div class="modal-box" style="max-width:480px;">
+            <div class="modal-title">Asignar mesa</div>
+            <div style="margin-bottom:12px;">
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;" id="assignInfo"></div>
+                <div style="font-size:0.6875rem;color:var(--text-muted);">Selecciona la mesa para esta reserva. Las mesas en rojo ya estan ocupadas en esta franja horaria.</div>
+            </div>
+            <div class="tables-grid" id="assignTablesGrid" style="grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px;"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeTableAssignModal()">Cancelar</button>
+                <button class="btn btn-accent" id="btnAssignConfirm" onclick="confirmWithTable()" disabled>Confirmar mesa</button>
             </div>
         </div>
     </div>
@@ -781,13 +800,8 @@
             } catch(e) { showToast('Error al eliminar', 'error'); }
         }
 
-        async function confirmReservation() {
-            if (!selectedReservation) return;
-            try {
-                const r = await fetch('/api/admin/reservations/' + selectedReservation.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) });
-                const d = await r.json();
-                if (d.success) { closeDetailsModal(); showToast('Reserva confirmada', 'success'); loadReservations(); }
-            } catch(e) { showToast('Error al confirmar', 'error'); }
+        function confirmReservation() {
+            if (selectedReservation) openTableAssignModal(selectedReservation);
         }
 
         function updateStats(s) {
@@ -809,16 +823,19 @@
                 const lg = r.guests === '10+';
                 const gt = lg ? '10+ pers.' : r.guests + (r.guests == 1 ? ' pers.' : ' pers.');
                 const fd = new Date(r.date + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
-                return `<div class="res-card ${lg ? 'large-group' : ''} ${r.status === 'confirmed' ? 'confirmed' : ''}" onclick="showReservationDetails('${r.id}')">
-                    <div class="res-top"><span class="res-name">${r.name}</span>${lg ? '<span class="badge-lg">Grupo</span>' : ''}</div>
+                const tblTag = r.assignedTables && r.assignedTables.length ? '<span class="res-tag" style="color:var(--accent);font-weight:500;">Mesa ' + r.assignedTables.join(', ') + '</span>' : '';
+                const confirmed = r.status === 'confirmed';
+                return `<div class="res-card ${lg ? 'large-group' : ''} ${confirmed ? 'confirmed' : ''}" onclick="showReservationDetails('${r.id}')">
+                    <div class="res-top"><span class="res-name">${r.name}</span>${lg ? '<span class="badge-lg">Grupo</span>' : ''}${confirmed ? '<span style="font-size:0.5625rem;color:var(--success);font-weight:600;">CONFIRMADA</span>' : ''}</div>
                     <div class="res-info">
                         <span class="res-tag"><b>${fd}</b></span>
                         <span class="res-tag"><b>${r.time}</b></span>
                         <span class="res-tag">${gt}</span>
                         <span class="res-tag">${r.phone}</span>
+                        ${tblTag}
                     </div>
                     <div class="res-actions" onclick="event.stopPropagation()">
-                        <button class="btn btn-success btn-sm" onclick="quickConfirm('${r.id}')">Confirmar</button>
+                        ${confirmed ? '' : '<button class="btn btn-success btn-sm" onclick="quickConfirm(\'' + r.id + '\')">Confirmar</button>'}
                         <button class="btn btn-outline btn-sm" onclick="showReservationDetails('${r.id}')">Detalles</button>
                     </div>
                 </div>`;
@@ -829,12 +846,22 @@
             const c = document.getElementById('tablesGrid');
             const n = config.totalTables || 20;
             document.getElementById('tableCount').textContent = n + ' mesas';
+
+            const takenTables = new Set();
+            reservations.forEach(r => {
+                if (r.date === currentDate && r.assignedTables) {
+                    r.assignedTables.forEach(t => takenTables.add(t));
+                }
+            });
+
             c.innerHTML = '';
             for (let i = 1; i <= n; i++) {
                 const cap = i <= 8 ? 2 : (i <= 14 ? 4 : (i <= 18 ? 6 : 8));
+                const taken = takenTables.has(i);
+                const status = taken ? 'reserved' : 'available';
                 const el = document.createElement('div');
-                el.className = 'tbl available';
-                el.innerHTML = `<div class="tbl-dot available"></div><div class="tbl-num">${i}</div><div class="tbl-cap">${cap}p</div>`;
+                el.className = 'tbl ' + status;
+                el.innerHTML = '<div class="tbl-dot ' + status + '"></div><div class="tbl-num">' + i + '</div><div class="tbl-cap">' + cap + 'p</div>';
                 c.appendChild(el);
             }
         }
@@ -851,16 +878,80 @@
                 <div class="info-row"><span class="info-lbl">Fecha</span><span class="info-val">${fd}</span></div>
                 <div class="info-row"><span class="info-lbl">Hora</span><span class="info-val">${selectedReservation.time}</span></div>
                 <div class="info-row"><span class="info-lbl">Comensales</span><span class="info-val">${gt}</span></div>
+                <div class="info-row"><span class="info-lbl">Mesa</span><span class="info-val">${selectedReservation.assignedTables && selectedReservation.assignedTables.length ? 'Mesa ' + selectedReservation.assignedTables.join(', ') : 'Sin asignar'}</span></div>
                 <div class="info-row"><span class="info-lbl">Estado</span><span class="info-val">${selectedReservation.status === 'confirmed' ? 'Confirmada' : 'Pendiente'}</span></div>`;
             document.getElementById('detailsModal').classList.add('show');
         }
 
-        async function quickConfirm(id) {
+        let pendingConfirmId = null;
+        let selectedTableForAssign = null;
+
+        function quickConfirm(id) {
+            const res = reservations.find(r => r.id === id);
+            if (res) openTableAssignModal(res);
+        }
+
+        function openTableAssignModal(reservation) {
+            if (!reservation) return;
+            pendingConfirmId = reservation.id;
+            selectedTableForAssign = null;
+            document.getElementById('btnAssignConfirm').disabled = true;
+
+            const gt = reservation.guests === '10+' ? '10+' : reservation.guests;
+            document.getElementById('assignInfo').textContent = reservation.name + ' - ' + reservation.time + ' - ' + gt + ' pers.';
+
+            const takenTables = new Set();
+            reservations.forEach(r => {
+                if (r.id !== reservation.id && r.date === reservation.date && r.time === reservation.time && r.assignedTables) {
+                    r.assignedTables.forEach(t => takenTables.add(t));
+                }
+            });
+
+            const grid = document.getElementById('assignTablesGrid');
+            const n = config.totalTables || 20;
+            grid.innerHTML = '';
+            for (let i = 1; i <= n; i++) {
+                const cap = i <= 8 ? 2 : (i <= 14 ? 4 : (i <= 18 ? 6 : 8));
+                const taken = takenTables.has(i);
+                const el = document.createElement('div');
+                el.className = 'tbl' + (taken ? ' assign-taken' : ' available');
+                el.innerHTML = '<div class="tbl-num">' + i + '</div><div class="tbl-cap">' + cap + 'p</div>';
+                if (!taken) {
+                    el.addEventListener('click', function() {
+                        grid.querySelectorAll('.tbl').forEach(t => t.classList.remove('assign-selected'));
+                        this.classList.add('assign-selected');
+                        selectedTableForAssign = i;
+                        document.getElementById('btnAssignConfirm').disabled = false;
+                    });
+                }
+                grid.appendChild(el);
+            }
+
+            document.getElementById('tableAssignModal').classList.add('show');
+        }
+
+        function closeTableAssignModal() {
+            document.getElementById('tableAssignModal').classList.remove('show');
+            pendingConfirmId = null;
+            selectedTableForAssign = null;
+        }
+
+        async function confirmWithTable() {
+            if (!pendingConfirmId || !selectedTableForAssign) return;
             try {
-                const r = await fetch('/api/admin/reservations/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) });
+                const r = await fetch('/api/admin/reservations/' + pendingConfirmId, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'confirmed', assignedTables: [selectedTableForAssign] })
+                });
                 const d = await r.json();
-                if (d.success) { showToast('Confirmada', 'success'); loadReservations(); }
-            } catch(e) { showToast('Error', 'error'); }
+                if (d.success) {
+                    closeTableAssignModal();
+                    closeDetailsModal();
+                    showToast('Confirmada - Mesa ' + selectedTableForAssign, 'success');
+                    loadReservations();
+                }
+            } catch(e) { showToast('Error al confirmar', 'error'); }
         }
 
         function updateConfigForm() {
