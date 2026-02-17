@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - Reservas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a2332;
-            --secondary: #3d5a80;
-            --accent: #ee6c4d;
-            --accent-light: #ff8566;
-            --success: #52b788;
-            --warning: #f77f00;
-            --danger: #d62828;
-            --bg: #f8f9fa;
+            --primary: #1B2838;
+            --secondary: #2D3E50;
+            --accent: #3B7BF4;
+            --accent-light: #5A93FF;
+            --success: #1A7F37;
+            --warning: #BF8700;
+            --danger: #CF222E;
+            --bg: #F5F6F8;
             --card-bg: #ffffff;
-            --text: #2b2d42;
-            --text-light: #6c757d;
-            --border: #dee2e6;
-            --shadow: rgba(0, 0, 0, 0.1);
+            --text: #1B2838;
+            --text-light: #6B7A8D;
+            --border: #DFE3E8;
+            --shadow: rgba(0, 0, 0, 0.06);
         }
 
         * {
@@ -29,7 +29,7 @@
         }
 
         body {
-            font-family: 'Work Sans', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
@@ -55,9 +55,10 @@
         }
 
         .header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
         }
 
         .header-actions {
@@ -84,7 +85,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Work Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         .btn-primary {
@@ -94,8 +95,6 @@
 
         .btn-primary:hover {
             background: var(--accent-light);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(238, 108, 77, 0.3);
         }
 
         .btn-secondary {
@@ -174,7 +173,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             color: var(--primary);
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
         }
 
         .stat-subtitle {
@@ -227,8 +226,8 @@
         }
 
         .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.125rem;
             font-weight: 600;
             color: var(--primary);
         }
@@ -417,7 +416,7 @@
             border: 2px solid var(--border);
             border-radius: 8px;
             font-size: 1rem;
-            font-family: 'Work Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             transition: all 0.3s ease;
         }
 
@@ -499,8 +498,9 @@
         }
 
         .modal-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
             color: var(--primary);
         }
 
@@ -673,11 +673,11 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <h1>🍽️ Panel de Administración</h1>
+            <h1>Panel de Administracion</h1>
             <div class="header-actions">
                 <input type="date" id="dateFilter" class="date-selector">
-                <button class="btn btn-secondary" onclick="showConfigModal()">⚙️ Configuración</button>
-                <button class="btn btn-primary" onclick="refreshData()">🔄 Actualizar</button>
+                <button class="btn btn-secondary" onclick="showConfigModal()">Configuracion</button>
+                <button class="btn btn-primary" onclick="refreshData()">Actualizar</button>
             </div>
         </div>
     </header>
@@ -1051,7 +1051,7 @@
             if (reservations.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-state-icon">📅</div>
+                        <div class="empty-state-icon" style="font-size:2rem;opacity:0.3;">--</div>
                         <p>No hay reservas para este día</p>
                     </div>
                 `;
@@ -1075,29 +1075,29 @@
                          onclick="showReservationDetails('${reservation.id}')">
                         <div class="reservation-header">
                             <div class="reservation-name">${reservation.name}</div>
-                            ${isLargeGroup ? '<div class="large-group-badge">⚠️ Grupo Grande</div>' : ''}
+                            ${isLargeGroup ? '<div class="large-group-badge">GRUPO GRANDE</div>' : ''}
                         </div>
                         <div class="reservation-details">
                             <div class="detail-item">
-                                <span class="detail-icon">📅</span>
+                                <span class="detail-icon" style="font-weight:600;">F</span>
                                 <span>${formattedDate}</span>
                             </div>
                             <div class="detail-item">
-                                <span class="detail-icon">⏰</span>
+                                <span class="detail-icon" style="font-weight:600;">H</span>
                                 <span>${reservation.time}</span>
                             </div>
                             <div class="detail-item">
-                                <span class="detail-icon">👥</span>
+                                <span class="detail-icon" style="font-weight:600;">P</span>
                                 <span>${guestText}</span>
                             </div>
                             <div class="detail-item">
-                                <span class="detail-icon">📞</span>
+                                <span class="detail-icon" style="font-weight:600;">T</span>
                                 <span>${reservation.phone}</span>
                             </div>
                         </div>
                         <div class="reservation-actions" onclick="event.stopPropagation()">
                             <button class="btn btn-success btn-small" onclick="quickConfirm('${reservation.id}')">
-                                ✓ Confirmar
+                                Confirmar
                             </button>
                             <button class="btn btn-secondary btn-small" onclick="showReservationDetails('${reservation.id}')">
                                 Ver Detalles
@@ -1181,7 +1181,7 @@
                 </div>
                 <div class="info-row">
                     <span class="info-label">Estado:</span>
-                    <span class="info-value">${selectedReservation.status === 'confirmed' ? '✓ Confirmada' : '⏳ Pendiente'}</span>
+                    <span class="info-value">${selectedReservation.status === 'confirmed' ? 'Confirmada' : 'Pendiente'}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">ID:</span>
