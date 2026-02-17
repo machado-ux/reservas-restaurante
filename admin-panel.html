@@ -702,7 +702,7 @@
         let zoomLevel = 100;
 
         function changeZoom(dir) {
-            zoomLevel = Math.max(70, Math.min(130, zoomLevel + dir * 5));
+            zoomLevel = Math.max(50, Math.min(200, zoomLevel + dir * 5));
             document.getElementById('mainContainer').style.zoom = (zoomLevel / 100);
             document.getElementById('zoomLevel').textContent = zoomLevel + '%';
             localStorage.setItem('adminZoom', zoomLevel);
