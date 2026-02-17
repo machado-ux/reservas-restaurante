@@ -26,9 +26,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html { font-size: 14px; }
-
         body {
             font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg);
@@ -49,87 +47,42 @@
             top: 0;
             z-index: 100;
         }
-
         .header-inner {
-            max-width: 1280px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1280px; width: 100%; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
         }
-
         .header h1 {
-            font-size: 0.875rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            color: #D4D4D8;
+            font-size: 0.875rem; font-weight: 600; letter-spacing: 0.3px;
+            text-transform: uppercase; color: #D4D4D8;
         }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
+        .header-actions { display: flex; gap: 8px; align-items: center; }
         .date-selector {
-            background: var(--secondary);
-            border: 1px solid #3F3F46;
-            padding: 5px 10px;
-            border-radius: 4px;
-            color: #D4D4D8;
-            font-size: 0.8125rem;
-            font-family: inherit;
+            background: var(--secondary); border: 1px solid #3F3F46;
+            padding: 5px 10px; border-radius: 4px; color: #D4D4D8;
+            font-size: 0.8125rem; font-family: inherit;
         }
 
-        /* --- Zoom control --- */
+        /* --- Zoom --- */
         .zoom-control {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 8px;
-            border-left: 1px solid #3F3F46;
-            padding-left: 8px;
+            display: flex; align-items: center; gap: 4px;
+            margin-left: 8px; border-left: 1px solid #3F3F46; padding-left: 8px;
         }
-
-        .zoom-control span {
-            font-size: 0.6875rem;
-            color: #71717A;
-            min-width: 32px;
-            text-align: center;
-        }
-
+        .zoom-control span { font-size: 0.6875rem; color: #71717A; min-width: 32px; text-align: center; }
         .zoom-btn {
-            width: 24px;
-            height: 24px;
-            border-radius: 3px;
-            border: 1px solid #3F3F46;
-            background: var(--secondary);
-            color: #A1A1AA;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.875rem;
-            font-weight: 600;
-            line-height: 1;
+            width: 24px; height: 24px; border-radius: 3px;
+            border: 1px solid #3F3F46; background: var(--secondary);
+            color: #A1A1AA; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.875rem; font-weight: 600; line-height: 1;
         }
-
         .zoom-btn:hover { background: #3F3F46; color: #fff; }
 
         /* --- Buttons --- */
         .btn {
-            padding: 5px 12px;
-            border: none;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            font-family: inherit;
-            transition: background 0.15s;
+            padding: 5px 12px; border: none; border-radius: 4px;
+            font-size: 0.75rem; font-weight: 500; cursor: pointer;
+            font-family: inherit; transition: background 0.15s;
         }
-
         .btn-accent { background: var(--accent); color: #fff; }
         .btn-accent:hover { background: var(--accent-light); }
         .btn-ghost { background: transparent; color: #A1A1AA; border: 1px solid #3F3F46; }
@@ -143,217 +96,119 @@
         .btn-sm { padding: 4px 8px; font-size: 0.6875rem; }
 
         /* --- Container --- */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 16px 24px;
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 16px 24px; }
 
         /* --- Stats --- */
         .stats-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 12px; margin-bottom: 16px;
         }
-
         .stat {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 14px 16px;
-            position: relative;
-            overflow: hidden;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 6px; padding: 14px 16px;
+            position: relative; overflow: hidden;
         }
-
         .stat::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--accent);
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 3px; height: 100%; background: var(--accent);
         }
-
         .stat.s-green::before { background: var(--success); }
         .stat.s-yellow::before { background: var(--warning); }
         .stat.s-red::before { background: var(--danger); }
-
         .stat-label {
-            font-size: 0.6875rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin-bottom: 4px;
+            font-size: 0.6875rem; font-weight: 500; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px;
         }
-
-        .stat-num {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text);
-            line-height: 1.2;
-        }
-
-        .stat-sub {
-            font-size: 0.6875rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .cap-bar {
-            height: 4px;
-            background: var(--border-light);
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-
-        .cap-fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 2px;
-            transition: width 0.4s;
-        }
-
+        .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+        .stat-sub { font-size: 0.6875rem; color: var(--text-muted); margin-top: 2px; }
+        .cap-bar { height: 4px; background: var(--border-light); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+        .cap-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s; }
         .cap-fill.high { background: var(--danger); }
 
         /* --- Main layout --- */
-        .main {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 16px;
-        }
-
+        .main { display: grid; grid-template-columns: 1fr 380px; gap: 16px; }
         .panel {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            overflow: hidden;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 6px; overflow: hidden;
         }
-
         .panel-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 16px; border-bottom: 1px solid var(--border);
         }
+        .panel-title { font-size: 0.8125rem; font-weight: 600; color: var(--text); }
+        .panel-count { font-size: 0.6875rem; color: var(--text-muted); }
+        .panel-body { padding: 12px 16px; max-height: 580px; overflow-y: auto; }
 
-        .panel-title {
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--text);
+        /* --- Time filter bar --- */
+        .time-filter {
+            display: flex; gap: 4px; flex-wrap: wrap; align-items: center;
+            padding: 8px 16px; border-bottom: 1px solid var(--border);
+            background: var(--surface);
         }
-
-        .panel-count {
-            font-size: 0.6875rem;
-            color: var(--text-muted);
+        .tf-btn {
+            padding: 4px 10px; border: 1px solid var(--border);
+            border-radius: 3px; font-size: 0.625rem; font-weight: 500;
+            background: #fff; color: var(--text-mid); cursor: pointer;
+            font-family: inherit; transition: all 0.15s;
         }
-
-        .panel-body {
-            padding: 12px 16px;
-            max-height: 520px;
-            overflow-y: auto;
+        .tf-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .tf-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .tf-custom {
+            display: flex; align-items: center; gap: 4px; margin-left: 4px;
         }
+        .tf-time {
+            padding: 3px 6px; border: 1px solid var(--border); border-radius: 3px;
+            font-size: 0.625rem; font-family: inherit; color: var(--text);
+            background: #fff; width: 72px;
+        }
+        .tf-time:focus { outline: none; border-color: var(--accent); }
+        .tf-sep { font-size: 0.625rem; color: var(--text-muted); }
 
         /* --- Reservations --- */
         .res-card {
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: border-color 0.15s;
-            border-left: 3px solid var(--border);
+            padding: 10px 12px; border: 1px solid var(--border);
+            border-radius: 5px; margin-bottom: 8px; cursor: pointer;
+            transition: border-color 0.15s; border-left: 3px solid var(--border);
         }
-
         .res-card:hover { border-color: var(--accent); }
         .res-card.confirmed { border-left-color: var(--success); }
         .res-card.large-group { border-left-color: var(--danger); background: #FEF2F2; }
-
-        .res-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .res-name {
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--text);
-        }
-
+        .res-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .res-name { font-size: 0.8125rem; font-weight: 600; color: var(--text); }
         .badge-lg {
-            background: var(--danger);
-            color: #fff;
-            padding: 1px 6px;
-            border-radius: 3px;
-            font-size: 0.5625rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            background: var(--danger); color: #fff; padding: 1px 6px;
+            border-radius: 3px; font-size: 0.5625rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.3px;
         }
-
-        .res-info {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 6px;
-        }
-
-        .res-tag {
-            font-size: 0.6875rem;
-            color: var(--text-muted);
-        }
-
+        .res-info { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+        .res-tag { font-size: 0.6875rem; color: var(--text-muted); }
         .res-tag b { color: var(--text-mid); font-weight: 500; }
-
-        .res-actions {
-            display: flex;
-            gap: 4px;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 32px 16px;
-            color: var(--text-muted);
-            font-size: 0.8125rem;
-        }
+        .res-actions { display: flex; gap: 4px; }
+        .empty { text-align: center; padding: 32px 16px; color: var(--text-muted); font-size: 0.8125rem; }
 
         /* --- Tables --- */
         .tables-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
             gap: 6px;
         }
-
         .tbl {
-            aspect-ratio: 1;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: border-color 0.15s;
+            aspect-ratio: 1; border: 1px solid var(--border); border-radius: 4px;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; cursor: pointer; transition: all 0.15s;
             position: relative;
         }
-
-        .tbl:hover { border-color: var(--accent); }
+        .tbl:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .tbl.neutral { background: var(--surface); border-color: var(--border); }
         .tbl.available { background: #F0FDF4; border-color: #BBF7D0; }
         .tbl.reserved { background: #FFFBEB; border-color: #FDE68A; }
         .tbl.occupied { background: #FEF2F2; border-color: #FECACA; }
-
         .tbl-num { font-size: 0.8125rem; font-weight: 600; color: var(--text); }
         .tbl-cap { font-size: 0.5625rem; color: var(--text-muted); }
-
         .tbl-dot {
             position: absolute; top: 3px; right: 3px;
             width: 5px; height: 5px; border-radius: 50%;
         }
+        .tbl-dot.neutral { background: var(--text-muted); }
         .tbl-dot.available { background: var(--success); }
         .tbl-dot.reserved { background: var(--warning); }
         .tbl-dot.occupied { background: var(--danger); }
@@ -361,166 +216,105 @@
         .tbl.assign-taken { background: #FEF2F2; border-color: #FECACA; opacity: 0.5; cursor: not-allowed; }
         .tbl.assign-selected { background: var(--accent-subtle); border-color: var(--accent); box-shadow: 0 0 0 2px rgba(124,58,237,0.2); }
 
+        /* --- Tooltip --- */
+        .tbl-tooltip {
+            display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
+            transform: translateX(-50%); background: var(--primary); color: #D4D4D8;
+            padding: 6px 10px; border-radius: 4px; font-size: 0.625rem;
+            white-space: nowrap; z-index: 50; pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); line-height: 1.5;
+        }
+        .tbl-tooltip::after {
+            content: ''; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); border: 4px solid transparent;
+            border-top-color: var(--primary);
+        }
+        .tbl:hover .tbl-tooltip { display: block; }
+        .tbl-tooltip .tt-name { font-weight: 600; color: #fff; }
+        .tbl-tooltip .tt-line { opacity: 0.7; }
+
         .legend {
-            display: flex;
-            gap: 12px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-light);
+            display: flex; gap: 12px; margin-top: 10px;
+            padding-top: 10px; border-top: 1px solid var(--border-light);
         }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.625rem;
-            color: var(--text-muted);
-        }
-
-        .legend-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 2px;
-        }
+        .legend-item { display: flex; align-items: center; gap: 4px; font-size: 0.625rem; color: var(--text-muted); }
+        .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
 
         /* --- Modal --- */
         .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 200;
-            padding: 24px;
-            overflow-y: auto;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); z-index: 200;
+            padding: 24px; overflow-y: auto;
         }
-
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
+        .modal.show { display: flex; align-items: center; justify-content: center; }
         .modal-box {
-            background: #fff;
-            border-radius: 8px;
-            padding: 24px;
-            max-width: 520px;
-            width: 100%;
+            background: #fff; border-radius: 8px; padding: 24px;
+            max-width: 520px; width: 100%;
             box-shadow: 0 8px 30px rgba(0,0,0,0.12);
             animation: modalIn 0.2s ease;
         }
-
         @keyframes modalIn {
             from { transform: translateY(-12px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-
         .modal-title {
-            font-size: 0.9375rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 16px;
-            padding-bottom: 12px;
+            font-size: 0.9375rem; font-weight: 600; color: var(--text);
+            margin-bottom: 16px; padding-bottom: 12px;
             border-bottom: 1px solid var(--border);
         }
-
         .modal-footer {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-            margin-top: 16px;
-            padding-top: 12px;
+            display: flex; gap: 8px; justify-content: flex-end;
+            margin-top: 16px; padding-top: 12px;
             border-top: 1px solid var(--border);
         }
 
-        .cfg-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
+        .cfg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .fg { margin-bottom: 12px; }
         .fg-label {
-            display: block;
-            font-size: 0.6875rem;
-            font-weight: 500;
-            color: var(--text-mid);
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            display: block; font-size: 0.6875rem; font-weight: 500;
+            color: var(--text-mid); margin-bottom: 4px;
+            text-transform: uppercase; letter-spacing: 0.3px;
         }
-
         .fg-input {
-            width: 100%;
-            padding: 7px 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 0.8125rem;
-            font-family: inherit;
-            color: var(--text);
-            background: var(--surface);
+            width: 100%; padding: 7px 10px; border: 1px solid var(--border);
+            border-radius: 4px; font-size: 0.8125rem; font-family: inherit;
+            color: var(--text); background: var(--surface);
         }
-
-        .fg-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(124,58,237,0.1);
-        }
-
-        .days-row {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-        }
-
+        .fg-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(124,58,237,0.1); }
+        .days-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .day-btn {
-            padding: 6px 0;
-            border: 1px solid var(--border);
-            background: #fff;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.6875rem;
-            font-weight: 500;
-            text-align: center;
-            transition: all 0.15s;
-            font-family: inherit;
+            padding: 6px 0; border: 1px solid var(--border); background: #fff;
+            border-radius: 4px; cursor: pointer; font-size: 0.6875rem;
+            font-weight: 500; text-align: center; transition: all 0.15s; font-family: inherit;
         }
-
-        .day-btn.selected {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-        }
-
+        .day-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
         .day-btn:hover { border-color: var(--accent); }
-
         .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-light);
+            display: flex; justify-content: space-between;
+            padding: 8px 0; border-bottom: 1px solid var(--border-light);
             font-size: 0.8125rem;
         }
-
         .info-row:last-child { border-bottom: none; }
         .info-lbl { color: var(--text-muted); }
         .info-val { font-weight: 600; color: var(--text); }
 
+        /* --- Table detail list in modal --- */
+        .tbl-res-item {
+            padding: 8px 10px; border: 1px solid var(--border);
+            border-radius: 4px; margin-bottom: 6px;
+            border-left: 3px solid var(--accent);
+        }
+        .tbl-res-item.is-confirmed { border-left-color: var(--success); }
+        .tbl-res-name { font-size: 0.8125rem; font-weight: 600; }
+        .tbl-res-meta { font-size: 0.6875rem; color: var(--text-muted); margin-top: 2px; }
+
         /* --- Toast --- */
         .toast {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            padding: 8px 14px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #fff;
-            z-index: 300;
-            display: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            position: fixed; bottom: 16px; right: 16px;
+            padding: 8px 14px; border-radius: 4px; font-size: 0.75rem;
+            font-weight: 500; color: #fff; z-index: 300;
+            display: none; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
-
         .toast.show { display: block; animation: toastIn 0.2s ease; }
         .toast.success { background: var(--success); }
         .toast.error { background: var(--danger); }
@@ -529,12 +323,9 @@
         /* --- Loading --- */
         .loading { text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.75rem; }
         .spinner {
-            border: 2px solid var(--border);
-            border-top: 2px solid var(--accent);
-            border-radius: 50%;
-            width: 20px; height: 20px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 8px;
+            border: 2px solid var(--border); border-top: 2px solid var(--accent);
+            border-radius: 50%; width: 20px; height: 20px;
+            animation: spin 0.8s linear infinite; margin: 0 auto 8px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -543,13 +334,13 @@
             .main { grid-template-columns: 1fr; }
             .stats-row { grid-template-columns: repeat(2, 1fr); }
         }
-
         @media (max-width: 640px) {
             .header-inner { flex-direction: column; gap: 8px; }
             .header { height: auto; padding: 10px 16px; }
             .stats-row { grid-template-columns: 1fr 1fr; }
             .container { padding: 12px 16px; }
             .cfg-grid { grid-template-columns: 1fr; }
+            .time-filter { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -596,6 +387,7 @@
         </div>
 
         <div class="main">
+            <!-- Reservations -->
             <div class="panel">
                 <div class="panel-head">
                     <span class="panel-title">Reservas del dia</span>
@@ -606,14 +398,28 @@
                 </div>
             </div>
 
+            <!-- Tables -->
             <div class="panel">
                 <div class="panel-head">
                     <span class="panel-title">Mesas</span>
                     <span class="panel-count" id="tableCount">20 mesas</span>
                 </div>
+                <!-- Time filter -->
+                <div class="time-filter">
+                    <button class="tf-btn active" data-filter="all" onclick="setTimeFilter('all',this)">Todo el dia</button>
+                    <button class="tf-btn" data-filter="lunch" onclick="setTimeFilter('lunch',this)">Comidas</button>
+                    <button class="tf-btn" data-filter="dinner" onclick="setTimeFilter('dinner',this)">Cenas</button>
+                    <button class="tf-btn" data-filter="now" onclick="setTimeFilter('now',this)">Ahora</button>
+                    <div class="tf-custom">
+                        <input type="time" class="tf-time" id="tfFrom" value="12:00" onchange="setTimeFilter('custom')">
+                        <span class="tf-sep">a</span>
+                        <input type="time" class="tf-time" id="tfTo" value="16:00" onchange="setTimeFilter('custom')">
+                    </div>
+                </div>
                 <div class="panel-body">
                     <div class="tables-grid" id="tablesGrid"></div>
                     <div class="legend">
+                        <div class="legend-item"><div class="legend-dot" style="background:#E4E4E7;"></div>Sin filtro</div>
                         <div class="legend-item"><div class="legend-dot" style="background:#BBF7D0;"></div>Disponible</div>
                         <div class="legend-item"><div class="legend-dot" style="background:#FDE68A;"></div>Reservada</div>
                         <div class="legend-item"><div class="legend-dot" style="background:#FECACA;"></div>Ocupada</div>
@@ -628,30 +434,12 @@
         <div class="modal-box">
             <div class="modal-title">Configuracion del restaurante</div>
             <div class="cfg-grid">
-                <div class="fg">
-                    <label class="fg-label">Apertura</label>
-                    <input type="time" class="fg-input" id="openingTime">
-                </div>
-                <div class="fg">
-                    <label class="fg-label">Cierre</label>
-                    <input type="time" class="fg-input" id="closingTime">
-                </div>
-                <div class="fg">
-                    <label class="fg-label">Comidas - inicio</label>
-                    <input type="time" class="fg-input" id="lunchStart">
-                </div>
-                <div class="fg">
-                    <label class="fg-label">Comidas - fin</label>
-                    <input type="time" class="fg-input" id="lunchEnd">
-                </div>
-                <div class="fg">
-                    <label class="fg-label">Cenas - inicio</label>
-                    <input type="time" class="fg-input" id="dinnerStart">
-                </div>
-                <div class="fg">
-                    <label class="fg-label">Cenas - fin</label>
-                    <input type="time" class="fg-input" id="dinnerEnd">
-                </div>
+                <div class="fg"><label class="fg-label">Apertura</label><input type="time" class="fg-input" id="openingTime"></div>
+                <div class="fg"><label class="fg-label">Cierre</label><input type="time" class="fg-input" id="closingTime"></div>
+                <div class="fg"><label class="fg-label">Comidas - inicio</label><input type="time" class="fg-input" id="lunchStart"></div>
+                <div class="fg"><label class="fg-label">Comidas - fin</label><input type="time" class="fg-input" id="lunchEnd"></div>
+                <div class="fg"><label class="fg-label">Cenas - inicio</label><input type="time" class="fg-input" id="dinnerStart"></div>
+                <div class="fg"><label class="fg-label">Cenas - fin</label><input type="time" class="fg-input" id="dinnerEnd"></div>
             </div>
             <div class="fg">
                 <label class="fg-label">Dias operativos</label>
@@ -666,14 +454,8 @@
                 </div>
             </div>
             <div class="cfg-grid">
-                <div class="fg">
-                    <label class="fg-label">Mesas</label>
-                    <input type="number" class="fg-input" id="totalTables" min="1" max="50">
-                </div>
-                <div class="fg">
-                    <label class="fg-label">Capacidad total</label>
-                    <input type="number" class="fg-input" id="totalCapacity" min="10" max="500">
-                </div>
+                <div class="fg"><label class="fg-label">Mesas</label><input type="number" class="fg-input" id="totalTables" min="1" max="50"></div>
+                <div class="fg"><label class="fg-label">Capacidad total</label><input type="number" class="fg-input" id="totalCapacity" min="10" max="500"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeConfigModal()">Cancelar</button>
@@ -711,6 +493,17 @@
         </div>
     </div>
 
+    <!-- Table Info Modal -->
+    <div class="modal" id="tableInfoModal">
+        <div class="modal-box" style="max-width:420px;">
+            <div class="modal-title" id="tableInfoTitle">Mesa 1</div>
+            <div id="tableInfoBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeTableInfoModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -719,6 +512,87 @@
         let reservations = [];
         let selectedReservation = null;
         let zoomLevel = 100;
+        let activeTimeFilter = 'all';
+        let customFrom = '12:00';
+        let customTo = '16:00';
+
+        function timeToMin(t) {
+            if (!t) return 0;
+            const [h, m] = t.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function nowTimeStr() {
+            const n = new Date();
+            return String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+        }
+
+        function getFilterRange() {
+            if (activeTimeFilter === 'all') return null;
+            if (activeTimeFilter === 'lunch') return { from: config.lunchStart || '12:00', to: config.lunchEnd || '16:00' };
+            if (activeTimeFilter === 'dinner') return { from: config.dinnerStart || '19:00', to: config.dinnerEnd || '23:00' };
+            if (activeTimeFilter === 'now') {
+                const now = nowTimeStr();
+                const nowMin = timeToMin(now);
+                const fromMin = Math.max(0, nowMin - 30);
+                const toMin = nowMin + 30;
+                const pad = m => String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
+                return { from: pad(fromMin), to: pad(toMin) };
+            }
+            if (activeTimeFilter === 'custom') return { from: customFrom, to: customTo };
+            return null;
+        }
+
+        function isTimeInRange(time, range) {
+            if (!range) return true;
+            const t = timeToMin(time);
+            return t >= timeToMin(range.from) && t <= timeToMin(range.to);
+        }
+
+        function isToday(dateStr) {
+            return dateStr === new Date().toISOString().split('T')[0];
+        }
+
+        function getTableStatus(tableNum, range) {
+            const matching = reservations.filter(r =>
+                r.date === currentDate &&
+                r.assignedTables && r.assignedTables.includes(tableNum) &&
+                isTimeInRange(r.time, range)
+            );
+            if (!matching.length) return { status: 'available', reservations: [] };
+
+            if (isToday(currentDate)) {
+                const nowMin = timeToMin(nowTimeStr());
+                const occupied = matching.find(r => {
+                    const rMin = timeToMin(r.time);
+                    return rMin <= nowMin && nowMin < rMin + 120;
+                });
+                if (occupied) return { status: 'occupied', reservations: matching };
+            }
+
+            return { status: 'reserved', reservations: matching };
+        }
+
+        function getTableReservations(tableNum) {
+            const range = getFilterRange();
+            return reservations.filter(r =>
+                r.date === currentDate &&
+                r.assignedTables && r.assignedTables.includes(tableNum) &&
+                isTimeInRange(r.time, range)
+            );
+        }
+
+        function setTimeFilter(type, btn) {
+            if (type === 'custom') {
+                customFrom = document.getElementById('tfFrom').value;
+                customTo = document.getElementById('tfTo').value;
+            }
+            activeTimeFilter = type;
+            document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            else if (type === 'custom') document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+            generateTables();
+        }
 
         function changeZoom(dir) {
             zoomLevel = Math.max(50, Math.min(200, zoomLevel + dir * 5));
@@ -739,7 +613,11 @@
         function initializeDatePicker() {
             const d = document.getElementById('dateFilter');
             d.value = currentDate;
-            d.addEventListener('change', function() { currentDate = this.value; loadReservations(); loadStats(); });
+            d.addEventListener('change', function() {
+                currentDate = this.value;
+                loadReservations();
+                loadStats();
+            });
         }
 
         function setupEventListeners() {
@@ -779,7 +657,7 @@
             try {
                 const r = await fetch('/api/admin/reservations?date=' + currentDate);
                 const d = await r.json();
-                if (d.success) { reservations = d.reservations; displayReservations(); loadStats(); }
+                if (d.success) { reservations = d.reservations; displayReservations(); generateTables(); loadStats(); }
             } catch(e) { showToast('Error al cargar reservas', 'error'); }
         }
 
@@ -825,20 +703,20 @@
                 const fd = new Date(r.date + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
                 const tblTag = r.assignedTables && r.assignedTables.length ? '<span class="res-tag" style="color:var(--accent);font-weight:500;">Mesa ' + r.assignedTables.join(', ') + '</span>' : '';
                 const confirmed = r.status === 'confirmed';
-                return `<div class="res-card ${lg ? 'large-group' : ''} ${confirmed ? 'confirmed' : ''}" onclick="showReservationDetails('${r.id}')">
-                    <div class="res-top"><span class="res-name">${r.name}</span>${lg ? '<span class="badge-lg">Grupo</span>' : ''}${confirmed ? '<span style="font-size:0.5625rem;color:var(--success);font-weight:600;">CONFIRMADA</span>' : ''}</div>
-                    <div class="res-info">
-                        <span class="res-tag"><b>${fd}</b></span>
-                        <span class="res-tag"><b>${r.time}</b></span>
-                        <span class="res-tag">${gt}</span>
-                        <span class="res-tag">${r.phone}</span>
-                        ${tblTag}
-                    </div>
-                    <div class="res-actions" onclick="event.stopPropagation()">
-                        ${confirmed ? '' : '<button class="btn btn-success btn-sm" onclick="quickConfirm(\'' + r.id + '\')">Confirmar</button>'}
-                        <button class="btn btn-outline btn-sm" onclick="showReservationDetails('${r.id}')">Detalles</button>
-                    </div>
-                </div>`;
+                return '<div class="res-card ' + (lg ? 'large-group' : '') + ' ' + (confirmed ? 'confirmed' : '') + '" onclick="showReservationDetails(\'' + r.id + '\')">' +
+                    '<div class="res-top"><span class="res-name">' + r.name + '</span>' + (lg ? '<span class="badge-lg">Grupo</span>' : '') + (confirmed ? '<span style="font-size:0.5625rem;color:var(--success);font-weight:600;">CONFIRMADA</span>' : '') + '</div>' +
+                    '<div class="res-info">' +
+                        '<span class="res-tag"><b>' + fd + '</b></span>' +
+                        '<span class="res-tag"><b>' + r.time + '</b></span>' +
+                        '<span class="res-tag">' + gt + '</span>' +
+                        '<span class="res-tag">' + r.phone + '</span>' +
+                        tblTag +
+                    '</div>' +
+                    '<div class="res-actions" onclick="event.stopPropagation()">' +
+                        (confirmed ? '' : '<button class="btn btn-success btn-sm" onclick="quickConfirm(\'' + r.id + '\')">Confirmar</button>') +
+                        '<button class="btn btn-outline btn-sm" onclick="showReservationDetails(\'' + r.id + '\')">Detalles</button>' +
+                    '</div>' +
+                '</div>';
             }).join('');
         }
 
@@ -846,24 +724,87 @@
             const c = document.getElementById('tablesGrid');
             const n = config.totalTables || 20;
             document.getElementById('tableCount').textContent = n + ' mesas';
-
-            const takenTables = new Set();
-            reservations.forEach(r => {
-                if (r.date === currentDate && r.assignedTables) {
-                    r.assignedTables.forEach(t => takenTables.add(t));
-                }
-            });
+            const range = getFilterRange();
 
             c.innerHTML = '';
             for (let i = 1; i <= n; i++) {
                 const cap = i <= 8 ? 2 : (i <= 14 ? 4 : (i <= 18 ? 6 : 8));
-                const taken = takenTables.has(i);
-                const status = taken ? 'reserved' : 'available';
+                let status, tableRes;
+
+                if (!range) {
+                    const allRes = reservations.filter(r => r.date === currentDate && r.assignedTables && r.assignedTables.includes(i));
+                    status = allRes.length ? 'reserved' : 'neutral';
+                    tableRes = allRes;
+                } else {
+                    const info = getTableStatus(i, range);
+                    status = info.status;
+                    tableRes = info.reservations;
+                }
+
                 const el = document.createElement('div');
                 el.className = 'tbl ' + status;
-                el.innerHTML = '<div class="tbl-dot ' + status + '"></div><div class="tbl-num">' + i + '</div><div class="tbl-cap">' + cap + 'p</div>';
+
+                let tooltipHtml = '';
+                if (tableRes.length) {
+                    tooltipHtml = '<div class="tbl-tooltip">';
+                    tableRes.forEach(r => {
+                        tooltipHtml += '<div class="tt-name">' + r.name + '</div>';
+                        tooltipHtml += '<div class="tt-line">' + r.time + ' - ' + (r.guests === '10+' ? '10+' : r.guests) + ' pers.</div>';
+                    });
+                    tooltipHtml += '</div>';
+                } else {
+                    tooltipHtml = '<div class="tbl-tooltip"><div class="tt-line">Sin reservas' + (range ? ' en este horario' : '') + '</div></div>';
+                }
+
+                el.innerHTML = '<div class="tbl-dot ' + status + '"></div>' +
+                    '<div class="tbl-num">' + i + '</div>' +
+                    '<div class="tbl-cap">' + cap + 'p</div>' +
+                    tooltipHtml;
+
+                el.addEventListener('click', function() { showTableInfo(i); });
                 c.appendChild(el);
             }
+        }
+
+        function showTableInfo(tableNum) {
+            const cap = tableNum <= 8 ? 2 : (tableNum <= 14 ? 4 : (tableNum <= 18 ? 6 : 8));
+            document.getElementById('tableInfoTitle').textContent = 'Mesa ' + tableNum + ' (' + cap + ' personas)';
+
+            const range = getFilterRange();
+            const allDayRes = reservations.filter(r => r.date === currentDate && r.assignedTables && r.assignedTables.includes(tableNum));
+            const filteredRes = range ? allDayRes.filter(r => isTimeInRange(r.time, range)) : allDayRes;
+
+            const body = document.getElementById('tableInfoBody');
+
+            if (!allDayRes.length) {
+                body.innerHTML = '<div class="empty" style="padding:16px;">Sin reservas para esta mesa hoy</div>';
+            } else {
+                let html = '';
+                if (range && filteredRes.length !== allDayRes.length) {
+                    html += '<div style="font-size:0.6875rem;color:var(--text-muted);margin-bottom:8px;">Mostrando ' + filteredRes.length + ' de ' + allDayRes.length + ' reservas del dia</div>';
+                }
+
+                const toShow = filteredRes.length ? filteredRes : allDayRes;
+                if (!filteredRes.length && range) {
+                    html += '<div style="font-size:0.6875rem;color:var(--warning);margin-bottom:8px;">Sin reservas en el horario filtrado. Mostrando todas las del dia:</div>';
+                }
+
+                toShow.forEach(r => {
+                    const gt = r.guests === '10+' ? '10+ pers.' : r.guests + ' pers.';
+                    const st = r.status === 'confirmed' ? 'Confirmada' : 'Pendiente';
+                    html += '<div class="tbl-res-item' + (r.status === 'confirmed' ? ' is-confirmed' : '') + '">' +
+                        '<div class="tbl-res-name">' + r.name + '</div>' +
+                        '<div class="tbl-res-meta">' + r.time + ' - ' + gt + ' - ' + st + ' - ' + r.phone + '</div>' +
+                    '</div>';
+                });
+                body.innerHTML = html;
+            }
+
+            document.getElementById('tableInfoModal').classList.add('show');
+        }
+
+        function closeTableInfoModal() {
+            document.getElementById('tableInfoModal').classList.remove('show');
         }
 
         function showReservationDetails(id) {
@@ -871,15 +812,15 @@
             if (!selectedReservation) return;
             const fd = new Date(selectedReservation.date + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             const gt = selectedReservation.guests === '10+' ? '10+ personas' : selectedReservation.guests + (selectedReservation.guests == 1 ? ' persona' : ' personas');
-            document.getElementById('reservationDetails').innerHTML = `
-                <div class="info-row"><span class="info-lbl">Nombre</span><span class="info-val">${selectedReservation.name}</span></div>
-                <div class="info-row"><span class="info-lbl">Telefono</span><span class="info-val">${selectedReservation.phone}</span></div>
-                <div class="info-row"><span class="info-lbl">Email</span><span class="info-val">${selectedReservation.email}</span></div>
-                <div class="info-row"><span class="info-lbl">Fecha</span><span class="info-val">${fd}</span></div>
-                <div class="info-row"><span class="info-lbl">Hora</span><span class="info-val">${selectedReservation.time}</span></div>
-                <div class="info-row"><span class="info-lbl">Comensales</span><span class="info-val">${gt}</span></div>
-                <div class="info-row"><span class="info-lbl">Mesa</span><span class="info-val">${selectedReservation.assignedTables && selectedReservation.assignedTables.length ? 'Mesa ' + selectedReservation.assignedTables.join(', ') : 'Sin asignar'}</span></div>
-                <div class="info-row"><span class="info-lbl">Estado</span><span class="info-val">${selectedReservation.status === 'confirmed' ? 'Confirmada' : 'Pendiente'}</span></div>`;
+            document.getElementById('reservationDetails').innerHTML =
+                '<div class="info-row"><span class="info-lbl">Nombre</span><span class="info-val">' + selectedReservation.name + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Telefono</span><span class="info-val">' + selectedReservation.phone + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Email</span><span class="info-val">' + selectedReservation.email + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Fecha</span><span class="info-val">' + fd + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Hora</span><span class="info-val">' + selectedReservation.time + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Comensales</span><span class="info-val">' + gt + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Mesa</span><span class="info-val">' + (selectedReservation.assignedTables && selectedReservation.assignedTables.length ? 'Mesa ' + selectedReservation.assignedTables.join(', ') : 'Sin asignar') + '</span></div>' +
+                '<div class="info-row"><span class="info-lbl">Estado</span><span class="info-val">' + (selectedReservation.status === 'confirmed' ? 'Confirmada' : 'Pendiente') + '</span></div>';
             document.getElementById('detailsModal').classList.add('show');
         }
 
@@ -926,7 +867,6 @@
                 }
                 grid.appendChild(el);
             }
-
             document.getElementById('tableAssignModal').classList.add('show');
         }
 
