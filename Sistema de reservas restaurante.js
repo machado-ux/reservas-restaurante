@@ -188,14 +188,25 @@ transporter.verify((error, success) => {
     }
 });
 
-// Serve the main HTML file
+// Landing page (portal selector)
 app.get('/', (req, res) => {
+    try {
+        const filePath = path.join(PROJECT_ROOT, 'index.html');
+        const html = fs.readFileSync(filePath, 'utf8');
+        res.type('html').send(html);
+    } catch (err) {
+        res.status(500).send('Error cargando página: ' + err.message);
+    }
+});
+
+// Client reservation app
+app.get('/reservas', (req, res) => {
     try {
         const filePath = path.join(PROJECT_ROOT, 'reservas.html');
         const html = fs.readFileSync(filePath, 'utf8');
         res.type('html').send(html);
     } catch (err) {
-        res.status(500).send('Error cargando página principal: ' + err.message);
+        res.status(500).send('Error cargando reservas: ' + err.message);
     }
 });
 
